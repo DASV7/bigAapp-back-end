@@ -4,7 +4,7 @@
   "description": "backend for big",
   "main": "index.js",
   "scripts": {
-    "start": "node --watch src/main.js"
+    "start": "node --watch main.js"
   },
   "repository": {
     "type": "git",

@@ -2,7 +2,7 @@
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
-const connectDbMongo = require("./db/dbConnection");
+const connectDbMongo = require("./src/db/dbConnection");
 
 const app = express();
 const port = process.env.PORT || 5500;
