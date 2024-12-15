@@ -4,11 +4,12 @@ const cors = require("cors");
 const connectDbMongo = require("./src/db/dbConnection");
 const whatsappRoutes = require("./src/routes/whatsapp.routes");
 const rentalRoutes = require("./src/routes/rental.routes");
+const projectRoutes = require("./src/routes/project.routes");
 
 const app = express();
 const port = process.env.PORT || 5500;
 
-const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173", "http://192.168.1.10:5173"];
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json()); // Para parsear JSON en el body
 
@@ -20,6 +21,9 @@ app.use("/api/whatsapp", whatsappRoutes);
 
 // Rutas de Rental
 app.use("/api/rentals", rentalRoutes);
+
+// Rutas de Project
+app.use("/api/projects", projectRoutes);
 
 // Inicializar el bot de WhatsApp
 const whatsappService = require('./src/lib/WhatsappBot/services/whatsappService');
