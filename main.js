@@ -3,11 +3,12 @@ const http = require("http");
 const cors = require("cors");
 const connectDbMongo = require("./src/db/dbConnection");
 const whatsappRoutes = require("./src/routes/whatsapp.routes");
+const rentalRoutes = require("./src/routes/rental.routes");
 
 const app = express();
 const port = process.env.PORT || 5500;
 
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json()); // Para parsear JSON en el body
 
@@ -16,6 +17,9 @@ connectDbMongo();
 
 // Rutas de WhatsApp
 app.use("/api/whatsapp", whatsappRoutes);
+
+// Rutas de Rental
+app.use("/api/rentals", rentalRoutes);
 
 // Inicializar el bot de WhatsApp
 const whatsappService = require('./src/lib/WhatsappBot/services/whatsappService');
@@ -48,5 +52,5 @@ process.on("SIGINT", async () => {
 });
 
 server.listen(port, () => {
-  console.log("Servidor escuchando en el puerto http://localhost:5500");
+  console.log(`Server running on port ${port}`);
 });
