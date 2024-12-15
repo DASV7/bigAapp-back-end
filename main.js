@@ -5,6 +5,7 @@ const connectDbMongo = require("./src/db/dbConnection");
 const whatsappRoutes = require("./src/routes/whatsapp.routes");
 const rentalRoutes = require("./src/routes/rental.routes");
 const projectRoutes = require("./src/routes/project.routes");
+const tenantRoutes = require("./src/routes/tenant.routes");
 
 const app = express();
 const port = process.env.PORT || 5500;
@@ -24,6 +25,9 @@ app.use("/api/rentals", rentalRoutes);
 
 // Rutas de Project
 app.use("/api/projects", projectRoutes);
+
+// Rutas de Inquilinos
+app.use("/api/tenants", tenantRoutes);
 
 // Inicializar el bot de WhatsApp
 const whatsappService = require('./src/lib/WhatsappBot/services/whatsappService');
