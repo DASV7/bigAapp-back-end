@@ -1,17 +1,28 @@
-// Importa las dependencias
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const connectDbMongo = require("./src/db/dbConnection");
+const whatsappRoutes = require("./src/routes/whatsapp.routes");
 
 const app = express();
 const port = process.env.PORT || 5500;
 
 const allowedOrigins = ["http://localhost:5173"];
 app.use(cors({ origin: allowedOrigins }));
+app.use(express.json()); // Para parsear JSON en el body
 
 const server = http.createServer(app);
 connectDbMongo();
+
+// Rutas de WhatsApp
+app.use("/api/whatsapp", whatsappRoutes);
+
+// Inicializar el bot de WhatsApp
+const whatsappService = require('./src/lib/WhatsappBot/services/whatsappService');
+
+whatsappService.initialize()
+  .then(() => console.log("WhatsApp service initialized successfully"))
+  .catch((err) => console.error("Failed to initialize WhatsApp service:", err));
 
 //log node version
 const { exec } = require("child_process");
@@ -23,6 +34,19 @@ exec("node -v", (error, stdout, stderr) => {
   console.log(`Versión de Node.js: ${stdout}`);
 });
 
+// Manejar el cierre gracioso de la aplicación
+process.on("SIGTERM", async () => {
+  console.log("Recibida señal SIGTERM. Cerrando aplicación...");
+  await whatsappService.destroy();
+  process.exit(0);
+});
+
+process.on("SIGINT", async () => {
+  console.log("Recibida señal SIGINT. Cerrando aplicación...");
+  await whatsappService.destroy();
+  process.exit(0);
+});
+
 server.listen(port, () => {
-  console.log("Servidor Socket.io escuchando en el puerto http://localhost:5500");
+  console.log("Servidor escuchando en el puerto http://localhost:5500");
 });
