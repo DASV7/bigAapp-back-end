@@ -11,7 +11,7 @@ const dashboardRoutes = require("./src/routes/dashboard");
 const app = express();
 const port = process.env.PORT || 5500;
 
-const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173", "http://192.168.1.10:5173"];
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173", "http://192.168.1.12:5173"];
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json()); // Para parsear JSON en el body
 
