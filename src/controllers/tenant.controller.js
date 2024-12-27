@@ -2,11 +2,37 @@ const Tenant = require('../models/tenant.model');
 
 exports.createTenant = async (req, res) => {
   try {
+    console.log('Datos recibidos en createTenant:', req.body);
     const tenant = new Tenant(req.body);
     const savedTenant = await tenant.save();
     res.status(201).json(savedTenant);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Error en createTenant:', error);
+    
+    // Manejar error de duplicación
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      const message = `El ${field === 'email' ? 'correo electrónico' : 'número de documento'} ya está registrado`;
+      return res.status(400).json({ 
+        message,
+        field,
+        type: 'duplicate'
+      });
+    }
+    
+    // Otros errores de validación
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        message: 'Error de validación',
+        details: Object.keys(error.errors).map(key => ({
+          field: key,
+          message: error.errors[key].message
+        }))
+      });
+    }
+    
+    // Error general
+    res.status(500).json({ message: 'Error al crear el inquilino' });
   }
 };
 
